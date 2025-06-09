@@ -1,0 +1,10 @@
+This is a basic ExpressJS app that includes JWT authentication and Sequelize seeding to make getting started easier.
+
+Basic requirements;
+Docker, NodeJS and a Frontend of your choosing.
+
+## To Start
+
+1. `npm install`
+2. `docker-compose up`
+3. 🎉

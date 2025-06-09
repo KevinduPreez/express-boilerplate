@@ -1,0 +1,89 @@
+
+services:
+  mysql-invoice:
+    container_name: mysql-invoice
+    image: 'mysql:8.0'
+    environment:
+      MYSQL_ROOT_PASSWORD: password #$MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: main #$MYSQL_DATABASE
+    ports:
+      - '3306:3306'
+    expose:
+      - 3306
+    volumes:
+      - ./datadir/dev:/var/lib/mysql
+    networks:
+      - internalnet
+  phpmyadmin-invoice:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma-invoice
+    depends_on:
+      - mysql-invoice
+    links:
+      - mysql-invoice
+    environment:
+      PMA_HOST: mysql-invoice
+      MYSQL_USER: root #$MYSQL_USER
+      MYSQL_PASSWORD: password #$MYSQL_PASSWORD
+      DB_DATABASE: main #$MYSQL_DATABASE
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: unless-stopped
+    ports:
+      - 8081:80
+    networks:
+      - internalnet
+  
+  express-app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: node index.js
+    networks:
+      - internalnet
+
+  
+  
+  # nodejs-invoice:
+  #   build:
+  #     context: .
+  #     dockerfile: DockerFile
+  #   tty: true
+  #   develop:
+  #     watch:
+  #       - action: sync+restart
+  #         path: .
+  #         target: /home/node/app
+  #         ignore:
+  #           - node_modules/
+  #   # image: nodejs
+  #   container_name: nodejs-invoice
+  #   depends_on:
+  #     - mysql-invoice
+  #   restart: unless-stopped
+  #   #env_file: .env
+  #   environment:
+  #     - DB_HOST=mysql-invoice #$DB_HOST
+  #     - DB_USER=root #$DB_USER
+  #     - DB_PASSWORD=password #$DB_PASSWORD
+  #     - DB_PORT=3306 #$DB_PORT
+  #   ports:
+  #     - "3000:3000"
+    # volumes:
+    #   - .:/home/node/app
+    #   # - node_modules:/home/node/app/node_modules
+    # networks:
+    #   - internalnet
+
+networks:
+  internalnet:
+    driver: bridge
+
+volumes:
+  db_data:
+  node_modules:
