@@ -1,7 +1,7 @@
 
 services:
-  mysql-invoice:
-    container_name: mysql-invoice
+  mysql-docker:
+    container_name: mysql-docker
     image: 'mysql:8.0'
     environment:
       MYSQL_ROOT_PASSWORD: password #$MYSQL_ROOT_PASSWORD
@@ -18,11 +18,11 @@ services:
     image: phpmyadmin/phpmyadmin
     container_name: pma-invoice
     depends_on:
-      - mysql-invoice
+      - mysql-docker
     links:
-      - mysql-invoice
+      - mysql-docker
     environment:
-      PMA_HOST: mysql-invoice
+      PMA_HOST: mysql-docker
       MYSQL_USER: root #$MYSQL_USER
       MYSQL_PASSWORD: password #$MYSQL_PASSWORD
       DB_DATABASE: main #$MYSQL_DATABASE
