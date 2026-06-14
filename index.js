@@ -19,13 +19,9 @@ sequelize.authenticate()
     server.listen(port, () => {
         console.log(`🚀 --> Server running on port ${port}`);
     });
-    //app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
   })
   .catch(err => {
     console.error('❌ --> Failed to connect to DB:', err);
   });
 
 const server = http.createServer(app);
-// server.listen(port, () => {
-//   console.log(`Server running on http://localhost:${port}`);
-// });
